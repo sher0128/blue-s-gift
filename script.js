@@ -178,10 +178,10 @@ const BGM = (() => {
   const MUSIC_KEY = 'birthdayQuest_musicEnabled';
   const FADE = 1000; // crossfade duration in ms
   const TRACKS = {
-    opening: { src: 'music/opening.wav', loop: false },
-    trial: { src: 'music/trial.wav', loop: true },
-    boss: { src: 'music/boss.wav', loop: true },
-    ending: { src: 'music/ending.wav', loop: true }
+    opening: { src: 'music/opening.mp3', loop: false },
+    trial: { src: 'music/trial.mp3', loop: true },
+    boss: { src: 'music/boss.mp3', loop: true },
+    ending: { src: 'music/ending.mp3', loop: true }
   };
 
   let enabled = true;
