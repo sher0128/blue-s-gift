@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="A mysterious trial awaits. Three trials. One gate." />
+  <title>THE FINAL TRIAL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <noscript>
+    <div class="noscript">此试炼需要启用 JavaScript 才能进入。</div>
+  </noscript>
+
+  <!-- Atmosphere overlays (decorative, never block input) -->
+  <div class="crt-overlay" aria-hidden="true"></div>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- Global fade / blackout veil -->
+  <div id="veil" class="veil" aria-hidden="true"></div>
+
+  <!-- Global sound toggle -->
+  <button id="btn-sound" class="btn btn--sound" aria-pressed="false">[ SOUND OFF ]</button>
+
+  <!-- Global music toggle -->
+  <button id="btn-music" class="btn btn--music" aria-pressed="true">[ MUSIC ON ]</button>
+
+  <!-- Credit -->
+  <div class="credit">sher 与 deep seek 共同制作</div>
+
+  <!-- ============================================================
+       SCREEN: INTRO
+       ============================================================ -->
+  <section id="screen-intro" class="screen screen--intro active">
+    <div class="intro-stage">
+      <p id="intro-line" class="intro-line">&nbsp;</p>
+      <button id="btn-intro-start" class="btn btn--primary intro-start hidden">[ 开始冒险 ]</button>
+    </div>
+    <div class="intro-foot">
+      <button id="btn-reset" class="btn btn--reset" type="button">RESET PROGRESS</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: INTERLUDE (chuunibyou transition)
+       ============================================================ -->
+  <section id="screen-interlude" class="screen screen--interlude">
+    <div class="interlude-stage">
+      <p id="interlude-line" class="interlude-line">&nbsp;</p>
+      <button id="btn-interlude-next" class="btn btn--primary hidden">[ 继续 ]</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: TRIAL I — REACTION TEST
+       ============================================================ -->
+  <section id="screen-reaction" class="screen screen--trial">
+    <div class="trial-topbar">
+      <div class="trial-topbar__info">
+        <span class="trial-topbar__name">REACTION TEST</span>
+        <span class="trial-topbar__stat" id="reaction-status">NOT CLEARED</span>
+        <span class="trial-topbar__frag">FRAGMENTS <span id="reaction-frag">0/3</span></span>
+      </div>
+    </div>
+
+    <div class="trial-panel">
+      <h2 class="trial-panel__title">REACTION TEST</h2>
+      <p class="trial-panel__cn">「试炼一：疾速之眼」</p>
+      <p class="trial-panel__desc">「世界不会等待迟钝之人。」</p>
+
+      <div id="reaction-idle" class="reaction-idle">
+        <p class="reaction-idle__text">在信号出现之前，保持平静。<br />信号出现的瞬间，立刻点击目标。<br /><span class="dim">共七轮。过早出手将被判定为 FALSE START。</span></p>
+        <button class="btn btn--primary" id="btn-reaction-start">[ START TRIAL ]</button>
+      </div>
+
+      <div id="reaction-play" class="reaction-play hidden">
+        <div class="reaction-hud">
+          <span class="reaction-hud__round" id="reaction-round">ROUND 1 / 7</span>
+          <span class="reaction-hud__msg" id="reaction-msg"></span>
+        </div>
+        <div id="reaction-arena" class="reaction-arena">
+          <span class="reaction-arena__wait" id="reaction-wait">AWAIT THE SIGNAL…</span>
+          <button id="reaction-target" class="reaction-target" aria-label="target"></button>
+        </div>
+      </div>
+
+      <div id="reaction-result" class="result hidden">
+        <h3 class="result__title">TRIAL CLEARED</h3>
+        <div class="result__stat">Average Reaction Time</div>
+        <div class="result__value" id="reaction-avg">— ms</div>
+        <div class="result__rank" id="reaction-rank">「 」</div>
+        <div class="result__rank-line" id="reaction-rank-line"></div>
+        <div class="result__frag">FRAGMENT I — EYE OF TIME</div>
+        <button class="btn btn--primary" id="btn-reaction-next">[ 进入下一试炼 ]</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: TRIAL II — FATE DRAW
+       ============================================================ -->
+  <section id="screen-fate" class="screen screen--trial">
+    <div class="trial-topbar">
+      <div class="trial-topbar__info">
+        <span class="trial-topbar__name">FATE DRAW</span>
+        <span class="trial-topbar__stat" id="fate-status">NOT CLEARED</span>
+        <span class="trial-topbar__frag">FRAGMENTS <span id="fate-frag">0/3</span></span>
+      </div>
+    </div>
+
+    <div class="trial-panel">
+      <h2 class="trial-panel__title">FATE DRAW</h2>
+      <p class="trial-panel__cn">「试炼二：命运抽卡」</p>
+      <p class="trial-panel__desc">「命运从不解释自己的选择。」</p>
+
+      <div class="fate-stage">
+        <div class="card" id="fate-card">
+          <div class="card-inner">
+            <div class="card-face card-back" id="fate-back">✶</div>
+            <div class="card-face card-front" id="fate-front">
+              <span class="card-front__symbol" id="fate-symbol">✶</span>
+              <span class="card-front__name" id="fate-name">—</span>
+              <span class="card-front__rarity rarity-common" id="fate-rarity">—</span>
+              <p class="card-front__desc" id="fate-desc"></p>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn--primary" id="btn-draw">[ DRAW ]</button>
+
+        <div class="fate-recorded hidden" id="fate-recorded">
+          <span class="fate-recorded__tag">FATE RECORDED</span>
+          <span class="fate-recorded__text" id="fate-recorded-text"></span>
+        </div>
+
+        <div id="fate-result" class="result hidden">
+          <h3 class="result__title">TRIAL CLEARED</h3>
+          <div class="result__frag">FRAGMENT II — FATE</div>
+          <p class="result__hint">命运已被记录。你仍可继续抽卡。</p>
+          <button class="btn btn--primary" id="btn-fate-next">[ 进入最终试炼 ]</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: TRIAL III — BOSS BATTLE
+       ============================================================ -->
+  <section id="screen-boss" class="screen screen--trial">
+    <div class="trial-topbar">
+      <div class="trial-topbar__info">
+        <span class="trial-topbar__name">BOSS BATTLE</span>
+        <span class="trial-topbar__stat" id="boss-status">NOT CLEARED</span>
+        <span class="trial-topbar__frag">FRAGMENTS <span id="boss-frag">0/3</span></span>
+      </div>
+    </div>
+
+    <div class="trial-panel trial-panel--boss">
+      <h2 class="trial-panel__title">BOSS BATTLE</h2>
+      <p class="trial-panel__cn">「试炼三：终焉之战」</p>
+      <p class="trial-panel__desc">「站在你面前的，是最后的敌人。」</p>
+
+      <div class="battle" id="boss-stage">
+        <div class="battle__boss" id="boss-area">
+          <div class="battle__boss-name" id="boss-name">THE FINAL BOSS</div>
+          <div class="battle__fig" id="boss-fig">
+            <svg viewBox="0 0 160 160" class="boss-sigil" aria-hidden="true">
+              <circle cx="80" cy="80" r="70" class="sigil-ring" />
+              <circle cx="80" cy="80" r="52" class="sigil-ring2" />
+              <path d="M80 26 L99 80 L80 134 L61 80 Z" class="sigil-eye" />
+              <circle cx="80" cy="80" r="15" class="sigil-pupil" />
+            </svg>
+          </div>
+          <div class="hpbar hpbar--boss">
+            <div class="hpbar__fill" id="boss-hp-fill"></div>
+            <div class="hpbar__label">BOSS HP <span id="boss-hp-text">100 / 100</span></div>
+          </div>
+        </div>
+
+        <div class="battle__player" id="player-area">
+          <div class="battle__player-name">THE WARRIOR</div>
+          <div class="hpbar hpbar--player">
+            <div class="hpbar__fill" id="player-hp-fill"></div>
+            <div class="hpbar__label">PLAYER HP <span id="player-hp-text">50 / 50</span></div>
+          </div>
+        </div>
+
+        <div class="battle__log" id="boss-log" aria-live="polite"></div>
+
+        <div class="battle__actions">
+          <button class="btn btn--attack" id="btn-attack">[ ATTACK ]</button>
+          <button class="btn btn--defend" id="btn-defend">[ DEFEND ]</button>
+          <button class="btn btn--special" id="btn-special">[ SPECIAL ]</button>
+        </div>
+      </div>
+
+      <div id="boss-overlay" class="boss-overlay hidden">
+        <p id="boss-overlay-line" class="boss-overlay__line"></p>
+        <div id="boss-overlay-frag" class="boss-overlay__frag hidden">FRAGMENT III — VICTORY</div>
+        <button id="boss-overlay-return" class="btn btn--primary hidden">[ 进入最终之门 ]</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: ENDING (hidden RPG ending)
+       ============================================================ -->
+  <section id="screen-ending" class="screen screen--ending">
+    <div id="ending-ritual" class="ending-ritual">
+      <p id="ending-line" class="ending-line">&nbsp;</p>
+    </div>
+
+    <div id="ending-reveal" class="ending-reveal hidden">
+      <p id="ending-birthday" class="ending-birthday">HAPPY BIRTHDAY.</p>
+
+      <div id="ending-poem" class="ending-poem">
+        <p class="ending-poem__verse">O may my heart's truth<br>Still be sung<br>In a year's turning.</p>
+        <p class="ending-poem__attr">— Dylan Thomas</p>
+        <p class="ending-poem__src">from <em>Poem in October</em></p>
+      </div>
+
+      <p id="ending-wish" class="ending-wish">愿新的一岁，仍有值得你歌唱的东西。</p>
+      <p id="ending-blessing" class="ending-blessing">十九岁生日快乐。</p>
+      <p id="ending-closing" class="ending-closing">愿下一次冒险依然有趣。</p>
+
+      <button id="btn-ending-return" class="btn btn--primary ending-return hidden">[ RETURN TO THE BEGINNING ]</button>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
